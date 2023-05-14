@@ -2,8 +2,9 @@ using DashSVD
 using Test
 using LinearAlgebra, SparseArrays, MKLSparse, MKL
 
-@testset "Check MKL" begin
+@testset "Check Environment" begin
     @test occursin("mkl_rt", DashSVD.check_mkl())
+	@test Threads.nthreads() == 16
 end
 
 @testset "Simple Matrix" begin
