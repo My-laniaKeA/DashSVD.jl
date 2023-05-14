@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - master
-    tags: ['*']
+    tags: ["*"]
   pull_request:
 concurrency:
   # Skip intermediate builds: always.
@@ -18,9 +18,9 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.0'
-          - '1.9'
-          - 'nightly'
+          - "1.7"
+          - "1.9"
+          - "nightly"
         os:
           - ubuntu-latest
         arch:
