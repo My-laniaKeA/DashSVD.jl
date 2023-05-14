@@ -1,0 +1,13 @@
+name = "DashSVD"
+uuid = "73c14b55-2bdc-4503-a6d3-13a0bfc892ae"
+authors = ["Minjia Wang"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
