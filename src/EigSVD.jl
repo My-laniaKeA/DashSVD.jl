@@ -4,11 +4,13 @@ function check_mkl()
 	return string(BLAS.get_config())
 end
 
-# [U, S, V] = eig_svd(A) for m >> n, using eig(A'*A)
+# [U, S, V] = eig_svd(A) for m >= n, using eig(A'*A)
 function eig_svd(A::AbstractMatrix)
+	m, n = size(A)
+	@assert m >= n
 	V = A' * A
 	F = eigen(V)
-	S = abs.(F.values)	# V may have negative eigenvalues in julia
+	S = F.values
 	V = F.vectors
 	V1 = deepcopy(V)	
 	n_rows, n_cols = size(V1)

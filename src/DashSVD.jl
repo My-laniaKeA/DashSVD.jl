@@ -11,17 +11,31 @@ const default_tol = 1e-2
 Random.seed!(777)
 
 # [U, S, V] = dash_svd(A, k)
-function dash_svd(A::SparseMatrixCSC{Tv,Ti}, 
-	k::Int, p::Int = default_p, s::Int = k ÷ 2, 
-	tol::Float64 = default_tol) where {Tv, Ti<:Int}
+function dash_svd(A::AbstractMatrix, 
+	k::Int, p::Int = default_p, s::Number = k ÷ 2, 
+	tol::Float64 = default_tol)
 
 	if p < 0
 		@warn "Power parameter p must be no less than 0 !"
 		return
 	end
 
+	if s + 1 > k || s == 0
+		@warn "Oversampling parameter s must be a positive integer that satisfies s <= k - 1 !"
+		return
+	end
+
 	l = k + s
 	m, n = size(A)
+	if k > min(m, n)
+		@warn "Rank k must be no more than min(m, n) !"
+		return
+	end
+
+	if min(m, n) < l
+		@warn "Upperbound of rank(A) (got: $(min(m,n))) must be no less than k + s (got: $(l)) !"
+		return
+	end
 
 	if m >= n
 		Q = randn(m, l)
@@ -39,7 +53,7 @@ function dash_svd(A::SparseMatrixCSC{Tv,Ti},
 			ei = maximum(pve_all[s+1:k])
 
 			if ei < tol break end
-			if alpha < S[1] 
+			if alpha < S[1]
 				alpha = (alpha + S[1])/2
 			end
 			sk = sk_now
