@@ -1,6 +1,6 @@
 name = "DashSVD"
 uuid = "73c14b55-2bdc-4503-a6d3-13a0bfc892ae"
-authors = ["Minjia Wang"]
+authors = ["Xu Feng", "Wenjian Yu", "Minjia Wang"]
 version = "0.1.0"
 
 [deps]
