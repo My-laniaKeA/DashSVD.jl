@@ -6,16 +6,49 @@ include("EigSVD.jl")
 
 using LinearAlgebra, SparseArrays, MKLSparse, MKL, Random
 
-const default_p = 1000
+const default_p_max = 1000
 const default_tol = 1e-2
 Random.seed!(777)
 
-# [U, S, V] = dash_svd(A, k)
+"""
+    dash_svd(A, k[, p_max, s, tol]) 
+
+A Julia implementation of the dynamic shifts-based randomized SVD (dashSVD) 
+with PVE accuracy control for a matrix `A` of rank `k`.
+
+Parameters:
+
+* `A`:  the input matrix of size (m, n)
+* `k`:  the target rank of truncated SVD, k ≤ min(m,n)
+* `p_max`: the upper bound of power parameter `p`, default = 1000
+* `s`:  the oversampling parameter, **min(m,n) ≥ k + s**, default = `k/2`
+* `tol`:the error tolerance for PVE, default = 1e-2
+
+Returns:
+
+* `U`: the matrix of size (m, k) 
+       containing the first `k` left singular vectors of `A`
+* `S`: the vector of size (k, ) 
+       containing the `k` largest singular values of `A` in **ascending** order
+* `V`: the matrix of size (n, k) 
+       containing the first `k` right singular vectors of `A`
+
+
+
+# Examples
+
+```julia
+julia> A = randn(10, 6)
+julia> U, S, V = dash_svd(A, 2)
+```
+
+
+"""
 function dash_svd(A::AbstractMatrix, 
-	k::Int, p::Int = default_p, s::Number = k ÷ 2, 
+	k::Int, p_max::Int = default_p_max, s::Number = k ÷ 2, 
 	tol::Float64 = default_tol)
 
-	if p < 0
+	if p_max < 0
 		@warn "Power parameter p must be no less than 0 !"
 		return
 	end
@@ -46,7 +79,7 @@ function dash_svd(A::AbstractMatrix,
 		sk_now = 0
 		sk = zeros(l)
 
-		for i in 1:p
+		for i in 1:p_max
 			Q, S, _ = eig_svd(A' * (A*Q) - alpha*Q)
 			sk_now = S .+ alpha
 			pve_all = abs.(sk_now-sk) ./ sk_now[s]
@@ -75,7 +108,7 @@ function dash_svd(A::AbstractMatrix,
 		sk_now = 0
 		sk = zeros(l)
 
-		for i in 1:p
+		for i in 1:p_max
 			Q, S, _ = eig_svd(A * (A'*Q) - alpha*Q)
 			sk_now = S .+ alpha
 			pve_all = abs.(sk_now-sk) ./ sk_now[s]
