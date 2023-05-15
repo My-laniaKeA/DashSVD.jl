@@ -1,6 +1,10 @@
 using DashSVD
 using Test
 using LinearAlgebra, SparseArrays, MKLSparse, MKL
+using CSV, DataFrames
+using BenchmarkTools
+
+include("metrics.jl")
 
 @testset "Environment" begin
     @test occursin("mkl_rt", DashSVD.check_mkl())
@@ -37,4 +41,27 @@ end
 			@test norm(abs.(V'Vf[:,k:-1:1]) - I, Inf) < tol * mnp
 		end
 	end
+end
+
+
+@testset "SNAP" begin
+	csc_matrix = CSV.read("SNAP.csv", DataFrame)
+	colptr = csc_matrix[:,1]
+	rowval = csc_matrix[:,2]
+	nzval = csc_matrix[:,3]
+	A = sparse(colptr, rowval, nzval)
+	k = 100
+	tol = 1e-2
+	U, S, V = @btime DashSVD.dash_svd($A, $k)
+	sv = CSV.read("SNAP_sv.csv", DataFrame)
+	Acc_S = sv[:,1]	# descending order
+	pve = pve_error(A, U, Acc_S, k)
+	@info "pve error" pve
+	@test pve < tol
+	res = res_error(A, U, S, V, Acc_S, k)
+	@info "res error" res
+	@test res < tol
+	sigma = sigma_error(S, Acc_S, k)
+	@info "sigma error" sigma
+	@test sigma < tol
 end

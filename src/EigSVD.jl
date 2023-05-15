@@ -4,7 +4,7 @@ function check_mkl()
 	return string(BLAS.get_config())
 end
 
-# [U, S, V] = eig_svd(A) for m >= n, using eig(A'*A)
+# [U, S, V] = eig_svd(A) for m >= n, using eigen(A'*A)
 function eig_svd(A::AbstractMatrix)
 	m, n = size(A)
 	@assert m >= n
