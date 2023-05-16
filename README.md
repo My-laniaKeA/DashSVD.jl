@@ -8,6 +8,12 @@ A Julia implementation of the dynamic shifts-based randomized SVD (dashSVD) with
 
 ## Algorithm
 
+![image-20230516080736815](README.assets/alg.png)
+
+
+
+## Interface
+
 Parameters:
 
 * `A`: the input matrix of size (m, n)
@@ -21,10 +27,6 @@ Returns:
 * `U`: the matrix of size (m, k) containing the first `k` left singular vectors of `A`
 * `S`: the vector of size (k, ) containing the `k` largest singular values of `A` in **ascending** order.
 * `V`: the matrix of size (n, k) containing the first `k` right singular vectors of `A`
-
-
-
-![image-20230516080736815](README.assets/alg.png)
 
 
 
