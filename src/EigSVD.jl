@@ -14,16 +14,14 @@ function eig_svd(A::AbstractMatrix)
 	m, n = size(A)
 	@assert m >= n
 	V = A' * A
-	F = eigen(V)
+	F = eigen(LinearAlgebra.Hermitian(V))
 	S = F.values
 	V = F.vectors
 	V1 = deepcopy(V)	
 	n_rows, n_cols = size(V1)
 	Threads.@threads for i in 1:n_cols
 		S[i] = sqrt(S[i])
-		for j in 1:n_rows
-			V1[j, i] /= S[i]
-		end
+		V1[:, i] ./= S[i]
 	end
 	U = A * V1
 	return U, S, V
