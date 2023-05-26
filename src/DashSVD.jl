@@ -49,25 +49,21 @@ function dash_svd(A::AbstractMatrix,
 	tol::Float64 = default_tol)
 
 	if p_max < 0
-		@warn "Power parameter p must be no less than 0 !"
-		return
+		@error "Power parameter p must be no less than 0 !"
 	end
 
 	if s + 1 > k || s == 0
-		@warn "Oversampling parameter s must be a positive integer that satisfies s <= k - 1 !"
-		return
+		@error "Oversampling parameter s must be a positive integer that satisfies s <= k - 1 !"
 	end
 
 	l = k + s
 	m, n = size(A)
 	if k > min(m, n)
-		@warn "Rank k must be no more than min(m, n) !"
-		return
+		@error "Rank k must be no more than min(m, n) !"
 	end
 
 	if min(m, n) < l
-		@warn "Upperbound of rank(A) (got: $(min(m,n))) must be no less than k + s (got: $(l)) !"
-		return
+		@error "Upperbound of rank(A) (got: $(min(m,n))) must be no less than k + s (got: $(l)) !"
 	end
 
 	if m >= n
@@ -75,8 +71,7 @@ function dash_svd(A::AbstractMatrix,
 		Q = A' * Q
 		Q, _, _ = eig_svd(Q)
 
-		alpha = 0
-		sk_now = 0
+		alpha = 0.0
 		sk = zeros(l)
 
 		for i in 1:p_max
