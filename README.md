@@ -2,6 +2,8 @@
 
 [![Build Status](https://github.com/My-laniaKeA/DashSVD.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/My-laniaKeA/DashSVD.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 
+This work is led by the [THU-numbda group](https://github.com/THU-numbda), and based on the dashSVD project.
+
 A Julia implementation of the dynamic shifts-based randomized SVD (dashSVD) with PVE accuracy control.
 
 
