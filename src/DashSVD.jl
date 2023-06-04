@@ -52,6 +52,10 @@ function dash_svd(A::AbstractMatrix,
 		@error "Power parameter p must be no less than 0 !"
 	end
 
+	if tol < 0
+		@error "Error tolerance tol must be no less than 0 !"
+	end
+
 	if s + 1 > k || s == 0
 		@error "Oversampling parameter s must be a positive integer that satisfies s <= k - 1 !"
 	end
@@ -99,8 +103,7 @@ function dash_svd(A::AbstractMatrix,
 		Q = A * Q
 		Q, _, _ = eig_svd(Q)
 
-		alpha = 0
-		sk_now = 0
+		alpha = 0.0
 		sk = zeros(l)
 
 		for i in 1:p_max
