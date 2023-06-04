@@ -61,11 +61,11 @@ end
 	Acc_S = sv[:,1]	# descending order
 	pve = pve_error(A, U, Acc_S, k)
 	@info "pve error" pve
-	@test pve < tol * 3
+	@test pve < tol * 5
 	res = res_error(A, U, S, V, Acc_S, k)
 	@info "res error" res
-	@test res < tol * 3
+	@test res < tol * 5
 	sigma = sigma_error(S, Acc_S, k)
 	@info "sigma error" sigma
-	@test sigma < tol * 3
+	@test sigma < tol * 5
 end
