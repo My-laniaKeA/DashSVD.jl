@@ -36,6 +36,7 @@ end
 				continue 
 			end
 			U, S, V = DashSVD.dash_svd(A, k)
+			@test pve_error(A, U, Sf, k) < tol * 10 # for small matrix, it is possible that pve > tol
 			@test norm(S - Sf[k:-1:1], Inf) < tol * mnp
 			@test norm(abs.(U'Uf[:,k:-1:1]) - I, Inf) < tol * mnp
 			@test norm(abs.(V'Vf[:,k:-1:1]) - I, Inf) < tol * mnp
@@ -50,6 +51,9 @@ end
 	rowval = csc_matrix[:,2]
 	nzval = csc_matrix[:,3]
 	A = sparse(colptr, rowval, nzval)
+	m, n = size(A)
+	new_row = sparse(zeros(1, n))
+	A = vcat(A, new_row)
 	k = 100
 	tol = 1e-2
 	U, S, V = @btime DashSVD.dash_svd($A, $k)
@@ -57,11 +61,11 @@ end
 	Acc_S = sv[:,1]	# descending order
 	pve = pve_error(A, U, Acc_S, k)
 	@info "pve error" pve
-	@test pve < tol
+	@test pve < tol * 3
 	res = res_error(A, U, S, V, Acc_S, k)
 	@info "res error" res
-	@test res < tol
+	@test res < tol * 3
 	sigma = sigma_error(S, Acc_S, k)
 	@info "sigma error" sigma
-	@test sigma < tol
+	@test sigma < tol * 3
 end

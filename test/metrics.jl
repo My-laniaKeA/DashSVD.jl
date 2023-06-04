@@ -3,9 +3,9 @@ using LinearAlgebra
 function pve_error(A::AbstractMatrix, U::AbstractMatrix, 
 					Acc_S::AbstractVector, k::Int, do_reverse::Bool = true)
 	if do_reverse == true
-		pve = maximum(abs.(reverse(diag(U'*A*(A'*U))) .- Acc_S[1:k].^2))./Acc_S[101]^2
+		pve = maximum(abs.(reverse(diag(U'*A*(A'*U))) .- Acc_S[1:k].^2))./Acc_S[k+1]^2
 	else
-		pve = maximum(abs.(diag(U'*A*(A'*U)) .- Acc_S[1:k].^2))./Acc_S[101]^2
+		pve = maximum(abs.(diag(U'*A*(A'*U)) .- Acc_S[1:k].^2))./Acc_S[k+1]^2
 	end
 	return pve
 end
