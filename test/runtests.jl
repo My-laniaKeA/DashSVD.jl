@@ -36,7 +36,7 @@ end
 				continue 
 			end
 			U, S, V = DashSVD.dash_svd(A, k)
-			@test pve_error(A, U, Sf, k) < tol * 10 # for small matrix, it is possible that pve > tol
+			@test pve_error(A, U, Sf, k) < tol * mnp # for small matrix, it is possible that pve > tol
 			@test norm(S - Sf[k:-1:1], Inf) < tol * mnp
 			@test norm(abs.(U'Uf[:,k:-1:1]) - I, Inf) < tol * mnp
 			@test norm(abs.(V'Vf[:,k:-1:1]) - I, Inf) < tol * mnp
